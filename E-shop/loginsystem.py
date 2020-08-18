@@ -1,5 +1,12 @@
 #login system
 from getpass import getpass
+
+def print_elements_name(list):
+    for dic in list:
+        try:
+            print("\t"+dic['user_name'])
+        except:
+            print("\t"+dic['product_name'])
 def invalid_name(list,element):
     for dic in list:
         try:
@@ -18,13 +25,38 @@ def add_user():
         user_name=input("This User name is Taken , Enter a new User Name: ")
     password=getpass("Enter the password: ")
     users.append({
+        'user_id':len(users),
         'user_name':user_name,
         'pasword':password,
         'Products':[]
     })
+def remove_user():
+    print("This is User List: ")
+    print_elements_name(users)
+    user_name=input("Enter the user_name to be removed: (b: return to main menu) : ")
+    if(user_name=='b'):
+        return admin_menu()
+    remove_id=None
+    for user in users:
+        if user['user_name']==user_name:
+            remove_id=user['user_id']
+            print(user)
+            break
+    if remove_id is None:
+        print("No such username exist")
+    
+    
+def add_product():
+    pass
+def remove_product():
+    pass
+def check_user():
+    pass
+def check_product():
+    pass
 
 def admin_menu():
-    task_number=input('1-->Add a user\n2-->Remove a user\n3-->Add a product\n4-->Remove a product\n5-->check Users\n6-->Check Products\n7-->Quit\nPlease Enter your Response:')
+    task_number=input('1-->Add a user\n2-->Remove a user\n3-->Add a product\n4-->Remove a product\n5-->check Users\n6-->Check Products\n7-->Quit\n Please Enter your Response:')
     while int(task_number) not in range(1,8):
         task_number=input("Incorrect Number\n Please Enter the correct number: ")
     return{
@@ -60,15 +92,18 @@ products=[
 ]
 users=[
     {
+        'user_id':0,
         'user_name':'admin',
         'password':'admin1234'
     },
     {
+        'user_id':1,
         'user_name':'sonu',
         'password':'sonu1234',
         'Products' :[products[0],products[3]]
     },
     {
+        'user_id':2,
         'user_name':'sanu',
         'password':'sanu1234',
         'Products':[products[1],products[2]]
