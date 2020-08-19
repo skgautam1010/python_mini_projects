@@ -20,12 +20,14 @@ def invalid_name(list,element):
     return False
 
 def add_user():
+    global logged_user
     user_name=input("Enter your Username : (b: return to main menu) : ")
     if user_name=='b':
         return admin_menu()
     while invalid_name(users,user_name):
         user_name=input("This User name is Taken , Enter a new User Name: ")
     password=getpass("Enter the password: ")
+    logged_user=len(users)
     users.append({
         'user_id':len(users),
         'user_name':user_name,
@@ -33,6 +35,27 @@ def add_user():
         'Products':[]
     })
     admin_menu()
+def add_customer():
+    global logged_user
+    name=input("Enter Your Name:   ")
+    mobile_no=int(input("Enter your Mobile Number: "))
+    user_name=input("Enter the Username:(b:return to main menu) :  ")
+    if user_name=='b':
+        return user_menu()
+    while invalid_name(users,user_name):
+        user_name=input("This username is taken, Enter a new User Name: ")
+    password=getpass("Enter the password: ")
+    logged_user=len(users)
+    users.append({
+        'user_id':len(users),
+        'user_name':user_name,
+        'password':password,
+        'Products':[]
+    })
+    print("Registration Successfull!!")
+    user_menu()
+
+
 def remove_user():
     print("This is User List: ")
     print_elements_name(users)
@@ -73,7 +96,7 @@ def add_product():
     product_quantity=int(input("Enter the product Quantity: "))
     products.append({
         'product_id':len(products),
-        'product_name':product_name,
+        'product_name':product_name+'                ',
         'product_price':product_price,
         'product_quantity':product_quantity
     })
@@ -120,13 +143,13 @@ def shopping():
     product_number=int(input("Enter the Product number u want to add to cart (-1:return to main menu) : "))
     if product_number==-1:
         return user_menu()
-    while product_number not in range(0,len(products)):
-        print("Incorrect Response!!!")
-        shopping()
-    else:
+    if product_number in range(0,len(products)):
         users[logged_user]['Products'].append(products[product_number])
         products[product_number]['product_quantity'] -=1
         print("Product added to the cart!!")
+    else:
+        print("The number choosed doesn't exist in the products list")
+        shopping()
     user_menu()
 
 
@@ -240,26 +263,32 @@ users=[
 name_dic=None
 logged_user=None
 tries=5
-while tries>0:
-    user_name=input("Please Enter your User Name : ")
-    password=getpass("please Enter your Password: ")
-    for user in users:
-        if user_name==user['user_name'] and password==user['password']:
-            logged_user=user['user_id']
-            tries=-1
-            break
-    if tries !=-1:
-        print("The Information Entered is Incorrect!You Have",tries-1,"tries left!!!")
-        tries=tries-1
-    if tries==0:
-        print("You crossed 5 tries")
-        quit()
-if user_name=='admin':
-    print("Hello Admin!")
-    admin_menu()
-else:
-    print("\nHello",user_name.capitalize(),"!")
-    user_menu()
+answer=input("1-->Register\n2-->SignIn\n  Please choose a option: ")
+while int(answer) not in range(1,3):
+    answer=input("1-->Register\n2-->SignIn\n  Please choose a option: ")
+if answer=='1':
+    add_customer()
+elif answer=='2':
+    while tries>0:
+        user_name=input("Please Enter your User Name : ")
+        password=getpass("please Enter your Password: ")
+        for user in users:
+            if user_name==user['user_name'] and password==user['password']:
+                logged_user=user['user_id']
+                tries=-1
+                break
+        if tries !=-1:
+            print("The Information Entered is Incorrect!You Have",tries-1,"tries left!!!")
+            tries=tries-1
+        if tries==0:
+            print("You crossed 5 tries")
+            quit()
+    if user_name=='admin':
+        print("Hello Admin!")
+        admin_menu()
+    else:
+        print("\nHello",user_name.capitalize(),"!")
+        user_menu()
 
 
 
