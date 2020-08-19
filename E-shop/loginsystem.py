@@ -104,20 +104,10 @@ def check_lists(list):
         i +=1
 def check_user():
     check_lists(users)
-    try:
-        answer=input("\n(b: return to main menu): ")
-        if answer=='b':
-            return admin_menu()
-    except:
-        print("Wrong Input!")
+    admin_menu()
 def check_product():
     check_lists(products)
-    try:
-        answer=input("\n(b:return to main menu) : ")
-        if answer=='b':
-            return admin_menu()
-    except:
-        print("Wrong Input!")
+    admin_menu()
 def finish():
     print("Thanks For Choosing Us!!")
     quit
@@ -131,7 +121,8 @@ def shopping():
     if product_number==-1:
         return user_menu()
     while product_number not in range(0,len(products)):
-        product_number=int(input("Incorrect Response!!!Enter the Product number again u want to add to cart (0:return to main menu) : "))
+        print("Incorrect Response!!!")
+        shopping()
     else:
         users[logged_user]['Products'].append(products[product_number])
         products[product_number]['product_quantity'] -=1
@@ -140,9 +131,40 @@ def shopping():
 
 
 def check_cart():
-    pass
+    try:
+        i=0
+        sum=0
+        for product in users[logged_user]['Products']:
+            print('('+str(i)+')',product['product_name'],'\t','$'+str(product['product_price']))
+            sum +=product['product_price']
+            i +=1
+        print('\n\tThe sum is:', '$'+str(sum), end='\n___________________________________________________________\n')
+    except:
+        print('Your cart is empty', end='\n___________________________________________________________\n')
+    user_menu()
+
 def remove_product_from_cart():
-    pass
+    try:
+        i=0
+        for product in users[logged_user]['Products']:
+            print('('+str(i)+')',product['product_name'],'\t','$'+str(product['product_price']))
+            i +=1
+    except:
+        print('You cart is empty', end='\n___________________________________________________________\n')
+        return user_menu()
+    product_to_remove=int(input("Please enter the product number that u want to remove: "))
+    if product_to_remove in range(0,len(users[logged_user]['Products'])):
+        answer=input("Are u sure u want to remove"+users[logged_user]['Products'][product_to_remove]['product_name'].strip()+'(y:yes/n:no) : ' ).lower()
+        if answer=='y':
+            users[logged_user]['Products'][product_to_remove]['product_quantity'] +=1
+            del users[logged_user]['Products'][product_to_remove]
+            print("The Product is removed from Cart!!!")
+        else:
+            return user_menu()
+    else:
+        print("Please Enter the Correct number!! The choosen Product Doesnt Exist in Your Cart!!")
+    user_menu()
+
 def admin_menu():
     task_number=input('--------------------------------\n1-->Add a user\n2-->Remove a user\n3-->Add a product\n4-->Remove a product\n5-->check Users\n'
     '6-->Check Products\n7-->Quit\n Please Enter your Response: ')
@@ -236,7 +258,7 @@ if user_name=='admin':
     print("Hello Admin!")
     admin_menu()
 else:
-    print("-------------------------------\nHello",user_name,"!")
+    print("\nHello",user_name.capitalize(),"!")
     user_menu()
 
 
