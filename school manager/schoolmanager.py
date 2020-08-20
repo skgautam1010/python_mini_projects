@@ -42,7 +42,7 @@ class Person:
         return self.__age
   
     def set_age(self,age):
-        if age>=5 and age<20:
+        if age>=5 and age<30:
             self.__age=age
         else:
             print("The age enetered is invalid!!")
@@ -55,11 +55,6 @@ class Person:
 
     def get_password(self):
         return self.__password
-
-    def administrator_set_password(self,password):
-        if len(password)<6:
-            new_password=getpass("password should contain 6 or more characters!!Enter the new password : ")
-        self.__password=new_password
 
     def set_password(self):
         old_password=getpass("please enter your password: ")
@@ -75,6 +70,11 @@ class Person:
         while len(password)<6:
             new_password=getpass("password should contain 6 or more characters!!\n  please enter a new password: ")
         self.__password=new_password
+
+    def administrator_set_password(self,password):
+        if len(password)<6:
+            password=getpass("password should contain 6 or more characters!!Enter the new password : ")
+        self.__password=password
 
 
 class Student(Person):
@@ -317,15 +317,17 @@ def get_member_number(member_list):
     return member_number
 
 def professor_menu(logged_member:Professor):
-    print('\n\t1)Change Your Password\n\t2)check students list\n\t3)Set Students marks\n\t4)Get students Marks')
+    print('\n\t1)Change Your Password\n\t2)check students list\n\t3)Set Students marks\n\t4)Get students Marks\n\t5)Back to Main Menu')
     operation=int(input('Please select an operation: '))
-    while operation not in range(1,5):
+    while operation not in range(1,6):
         operation = input('Wrong operation! please select an operation again: ')
     if operation==1:
         logged_member.set_password()
         print("The New Password Is set!!!!")
     elif operation==2:
         get_members_list(members[0])
+    elif operation==5:
+        main()
     elif operation==3:
         student_number=get_member_number(members[0])
         mark=int(input("Please enter the marks: "))
@@ -378,8 +380,8 @@ def get_members_detail(member_list):
 
 def add_members(member_list):
     print('Please enter the data of the %s: ' %
-          ('student' if members_list == members[0] else
-           'professor' if members_list == members[1] else
+          ('student' if member_list == members[0] else
+           'professor' if member_list == members[1] else
            'administrator'))
     if member_list==members[0]:
         member=Student('a','a',7,'a','a','a',11)
@@ -393,7 +395,7 @@ def add_members(member_list):
     member.set_last_name(input('Last_name: '))
     member.set_age(int(input('Age: ')))
     member.administrator_set_password(input('Enter password: '))
-    member.set_grade(input('Enter grade: ') if members_list == members[0]
+    member.set_grade(input('Enter grade: ') if member_list == members[0]
                      else int(input('Enter grade: ')))
     member.set_speciality(input('Enter speciality: '))
     member_list.append(member)
@@ -507,11 +509,87 @@ def professor_administrator_menu(logged_member:Administrator):
             print('Wrong operation! please enter an operation again: ')
     return professor_administrator_menu(logged_member)
 
+def admins_menu(logged_member:Administrator):
+    print('Please select what you want to manage:'
+          '\n\t1)Manage Administrators'
+          '\n\t2)Manage Professors'
+          '\n\t3)Manage Students\n\t4)Back to Main menu')
+    manage=int(input('> '))
+    while manage not in range(1,5):
+        manage=int(input("Incorrect Input!! Please select what u want to manage again: "))
+    def administrator_administrator_menu(logged_member: Administrator):
+        print('Please select an operation:'
+              '\n\t1)Change your password'
+              '\n\t2)Check administrators list'
+              '\n\t3)Change administrator first name'
+              '\n\t4)Change administrator last name'
+              '\n\t5)Change administrator middle name'
+              '\n\t6)Change administrator age'
+              '\n\t7)Change administrator email'
+              '\n\t8)Change administrator password'
+              '\n\t9)Change administrator grade'
+              '\n\t10)Change administrator speciality'
+              '\n\t11)Check administrator salary'
+              '\n\t12)Check administrators details'
+              '\n\t13)Add a new administrator'
+              '\n\t%s' % '14)Back to the admin menu' if logged_member.get_speciality() == 'ADMINS'
+              else '')
+        operation = int(input('> '))
+        while operation not in range(1, 15):
+            operation = int(input('Wrong operation! please enter an operation again: '))
+        if operation == 1:
+            logged_member.set_password()
+        elif operation == 2:
+            get_members_list(members[2])
+        elif operation in range(3, 9):
+            administrator_number = get_member_number(members[2])
+            data = input('Please enter the data that you want to set: ')
+            set_person_data('first_name' if operation == 3
+                            else 'last_name' if operation == 4
+                            else 'middle_name' if operation == 5
+                            else 'age' if operation == 6
+                            else 'email' if operation == 7
+                            else 'password', members[2][administrator_number],
+                                            data)
+        elif operation in range(9, 11):
+            administrator_number = get_member_number(members[2])
+            data = input('Please enter the data that you want to set: ')
+            {
+                9: members[2][administrator_number].set_grade,
+                10: members[2][administrator_number].set_speciality,
+            }[operation](data if operation == 10 else int(data))
+        elif operation == 11:
+            administrator_number = get_member_number(members[2])
+            print(members[2][administrator_number].get_salary())
+        elif operation == 12:
+            get_members_details(members[2])
+        elif operation == 13:
+            add_member(members[2])
+        else:
+            if logged_member.get_speciality() == 'ADMINS':
+                admins_menu(logged_member)
+            else:
+                print('Wrong operation! please enter an operation again: ')
+        return administrator_administrator_menu(logged_member)
+    '''{
+        1:administrator_administrator_menu,
+        2:professor_administrator_menu,
+        3:student_administrator_menu,
+    }[manage](logged_member)'''
+    if manage==1:
+        administrator_administrator_menu(logged_member)
+    elif manage==2:
+        professor_administrator_menu(logged_member)
+    elif manage==3:
+        student_administrator_menu(logged_member)
+    else:
+        main()
+    
 
 
 members=[[Student('sonu','gautam',24,'sonu1234','FIRST','PYTHON',15,'Kumar')] ,
             [Professor('Abc','xyz',44,'abc1234','4','MATHS',18)],
-            [Administrator('sk','gautam',23,'admin1234','5','admin')]]
+            [Administrator('sk','gautam',23,'admin1234','5','admins')]]
 
 def main():
     print("\t\t***********WELCOME TO OUR SCHOOL MANAGEMENT SYSTEM************\n\n1)Student\n2)Professor\n3)Administrator\n4)Exit ")
