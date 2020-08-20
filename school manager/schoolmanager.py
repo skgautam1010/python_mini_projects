@@ -157,12 +157,12 @@ class Student(Person):
     def get_average(self):
         if self.__maths and self.__informatics and self.__electronics:
             print(self.get_first_name(),self.get_last_name(),end=': ')
-            return round((self.__maths+self.__informatics+self.__electronics)/3,2)
+            print(round((self.__maths+self.__informatics+self.__electronics)/3,2))
         else:
             print('Maths: ',self.get_maths())
             print('Informatics: ',self.get_informatics())
             print('Electronics: ',self.get_electronics())
-            return 'Student doesnt have all the marks!!'
+            print('Student doesnt have all the marks!!')
     
     def define(self):
         if self.get_middile_name():
@@ -279,43 +279,149 @@ class Administrator(Person):
         else:
             print('Administrator',self.get_first_name(),self.get_last_name(),'-Id is: ',self.__id)
     
- 
 
-members=[[Student('sonu','gautam',24,'sonu1234','FIRST','PYTHON','10','Kumar')] ,
-        [Professor('Abc','xyz',44,'abc1234','4','MATHS',18)],
-         [Administrator('sk','gautam',23,'admin1234','5','admin')]]
-print("\t\t***********WELCOME TO OUR SCHOOL MANAGEMENT SYSTEM************\n\n1)Student\n2)Professor\n3)Administrator\n ")
-profession=int(input("\tPlease Choose Your Profession: "))-1
-while profession+1 not in range(1,4):
-    profession=int(input("Wrong choice!! Please choose your profession again:  "))
-logged_member=None
-while not logged_member:
-    email=input("please enter your email address: ")
-    for member in members[profession]:
-        if member.get_email()==email:
-            password=getpass('please enter your password: ')
-            for i in range(4):
-                if password==member.get_password():
-                    print("Hello ",member.get_first_name(),member.get_last_name())
-                    logged_member=member
-                    break
-                else:
-                    password=getpass("password incorrect!!!Please enter a valid password:  ")
-            break
-    if not logged_member:
-        print("Incorrect Information!!!")
-if profession==0:
-    student_menu(logged_member)
-elif profession==1:
-    professor_menu(logged_member)
-else:
-    if logged_member.get_speciality()=='STUDENTS':
-        student_administrator_menu(logged_member)
-    elif logged_member.get_speciality()=='PROFESSORS':
-        professor_administrator_menu(logged_member)
-    elif logged_member.get_speciality()=='ADMINS':
-        admins_menu(logged_member)
+def student_menu(logged_member:Student):
+    print('\n\t1)Change Your Password\n\t2)Check your Marks\n\t3)Check your Average\n\t4)Back to main menu ')
+    operation=int(input('Please choose the operation: '))
+    while operation not in range(1,5):
+        operation = input('Wrong operation! please choose an operation again: ')
+    if operation==1:
+        logged_member.set_password()
+        print("Your New Password is Set")
+    elif operation==2:
+        print('Maths mark:', logged_member.get_maths(),
+              '\nInformatics mark:', logged_member.get_informatics(),
+              '\nElectronics mark:', logged_member.get_electronics())
+    elif operation==3:
+        logged_member.get_average()
     else:
-        print("Administrator With A Wrong speciality!!!")
+        return main()
+    return student_menu(logged_member)
+
+def get_members_list(member_list):
+    i=1
+    for member in member_list:
+        print('('+str(i)+')',member.get_first_name(),member.get_last_name())
+        i +=1
+
+def get_member_number(member_list):
+    print('Please enter the number of the %s: ' %
+          ('student' if member_list == members[0] else
+            'professor' if member_list == members[1]else
+            'administrator'), end='')
+    member_number = int(input()) - 1
+    while member_number not in range(0, len(member_list)):
+        member_number = int(input('Number out of range! '
+                                  'please enter the number again: ')) - 1
+    return member_number
+
+def professor_menu(logged_member:Professor):
+    print('\n\t1)Change Your Password\n\t2)check students list\n\t3)Set Students marks\n\t4)Get students Marks')
+    operation=int(input('Please select an operation: '))
+    while operation not in range(1,5):
+        operation = input('Wrong operation! please select an operation again: ')
+    if operation==1:
+        logged_member.set_password()
+        print("The New Password Is set!!!!")
+    elif operation==2:
+        get_members_list(members[0])
+    elif operation==3:
+        student_number=get_member_number(members[0])
+        mark=int(input("Please enter the marks: "))
+        while mark not in range(0,21):
+            mark=int(input("Marks ranges from (0,20) Out of range!!! Please enter marks again: "))
+        {
+            'MATHS':members[0][student_number].set_maths,
+            'INFORMATICS':members[0][student_number].set_informatics,
+            'ELECTRONICS':members[0][student_number].set_electronics
+        }[logged_member.get_speciality()](mark)
+    else:
+        i=1
+        if logged_member.get_speciality()=='MATHS':
+            for student in members[0]:
+                print(str(i) + ')' + student.get_first_name(), student.get_last_name(),
+                     '\t\t', student.get_maths())
+                i += 1
+        elif logged_member.get_speciality() == 'INFORMATICS':
+            for student in members[0]:
+                print(str(i) + ')' + student.get_first_name(), student.get_last_name(),
+                     '\t\t', student.get_informatics())
+                i += 1
+        elif logged_member.get_speciality()=='ELECTRONICS':
+            for student in members[0]:
+                print(str(i) + ')' + student.get_first_name(), student.get_last_name(),
+                       '\t\t', student.get_electronics())
+                i += 1
+    return professor_menu(logged_member)
+
+def student_administrator_menu(logged_member:Administrator):
+    print('Please select an operation:'
+          '\n\t1)Change your password'
+          '\n\t2)Check students list'
+          '\n\t3)Set student first name'
+          '\n\t4)Set student last name'
+          '\n\t5)Set student middle name'
+          '\n\t6)Set student age'
+          '\n\t7)Set student email'
+          '\n\t8)Set student password'
+          '\n\t9)Set student grade'
+          '\n\t10)Set student speciality'
+          '\n\t11)Set student group number'
+          '\n\t12)Get students averages'
+          '\n\t13)Get students details'
+          '\n\t14)Add a new student'
+          '\n\t%s' % '15)Back to the admin menu' if logged_member.get_speciality() == 'ADMINS' else '')
+    operation=int(input('> '))
+    while operation not in range(1,16):
+        operation=int(input("Wrong operation!! Please enter the operation again:> "))
+    if operation==1:
+        logged_member.set_password()
+    elif operation==2:
+        get_members_list(members[0])
+    elif operation in range(3,9):
         
 
+members=[[Student('sonu','gautam',24,'sonu1234','FIRST','PYTHON',15,'Kumar')] ,
+            [Professor('Abc','xyz',44,'abc1234','4','MATHS',18)],
+            [Administrator('sk','gautam',23,'admin1234','5','admin')]]
+
+def main():
+    print("\t\t***********WELCOME TO OUR SCHOOL MANAGEMENT SYSTEM************\n\n1)Student\n2)Professor\n3)Administrator\n4)Exit ")
+    profession=int(input("\tPlease Choose Your Profession: "))-1
+    while profession+1 not in range(1,5):
+        profession=int(input("Wrong choice!! Please choose your profession again:  "))
+    if profession==3:
+        exit()
+    logged_member=None
+    while not logged_member:
+        email=input("please enter your email address: ")
+        for member in members[profession]:
+            if member.get_email()==email:
+                password=getpass('please enter your password: ')
+                for i in range(4):
+                    if password==member.get_password():
+                        print("Hello ",member.get_first_name(),member.get_last_name())
+                        logged_member=member
+                        break
+                    else:
+                        password=getpass("password incorrect!!!Please enter a valid password:  ")
+                break
+        if not logged_member:
+            print("Incorrect Information!!!")
+    if profession==0:
+        student_menu(logged_member)
+    elif profession==1:
+        professor_menu(logged_member)
+    else:
+        if logged_member.get_speciality()=='STUDENTS':
+            student_administrator_menu(logged_member)
+        elif logged_member.get_speciality()=='PROFESSORS':
+            professor_administrator_menu(logged_member)
+        elif logged_member.get_speciality()=='ADMINS':
+            admins_menu(logged_member)
+        else:
+            print("Administrator With A Wrong speciality!!!")
+            
+
+if __name__=='__main__':
+    main()
