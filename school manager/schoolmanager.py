@@ -279,5 +279,43 @@ class Administrator(Person):
         else:
             print('Administrator',self.get_first_name(),self.get_last_name(),'-Id is: ',self.__id)
     
-    
+ 
+
+members=[[Student('sonu','gautam',24,'sonu1234','FIRST','PYTHON','10','Kumar')] ,
+        [Professor('Abc','xyz',44,'abc1234','4','MATHS',18)],
+         [Administrator('sk','gautam',23,'admin1234','5','admin')]]
+print("\t\t***********WELCOME TO OUR SCHOOL MANAGEMENT SYSTEM************\n\n1)Student\n2)Professor\n3)Administrator\n ")
+profession=int(input("\tPlease Choose Your Profession: "))-1
+while profession+1 not in range(1,4):
+    profession=int(input("Wrong choice!! Please choose your profession again:  "))
+logged_member=None
+while not logged_member:
+    email=input("please enter your email address: ")
+    for member in members[profession]:
+        if member.get_email()==email:
+            password=getpass('please enter your password: ')
+            for i in range(4):
+                if password==member.get_password():
+                    print("Hello ",member.get_first_name(),member.get_last_name())
+                    logged_member=member
+                    break
+                else:
+                    password=getpass("password incorrect!!!Please enter a valid password:  ")
+            break
+    if not logged_member:
+        print("Incorrect Information!!!")
+if profession==0:
+    student_menu(logged_member)
+elif profession==1:
+    professor_menu(logged_member)
+else:
+    if logged_member.get_speciality()=='STUDENTS':
+        student_administrator_menu(logged_member)
+    elif logged_member.get_speciality()=='PROFESSORS':
+        professor_administrator_menu(logged_member)
+    elif logged_member.get_speciality()=='ADMINS':
+        admins_menu(logged_member)
+    else:
+        print("Administrator With A Wrong speciality!!!")
+        
 
