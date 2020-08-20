@@ -230,3 +230,54 @@ class Professor(Person):
             print('Professor',self.get_first_name(),self.get_last_name(),'-his id is: ',self.__id)
     
 
+class Administrator(Person):
+    number_of_administrators=0
+    def __init__(self, f_name, l_name, age, password,grade,speciality, m_name=''):
+        super().__init__(f_name, l_name, age, password, m_name)
+        self.__grade=grade
+        self.__speciality=speciality.upper()
+        self.__id='ADM' + '_' + str(self.__grade) + '_' + self.__speciality[0:3] + '_' + str(
+            self.number_of_administrators)
+        
+    def get_id(self):
+        return self.__id
+    
+    def set_id(self):
+        self.__id='ADM' + '_' + str(self.__grade) + '_' + self.__speciality[0:3] + '_' + str(
+            self.number_of_administrators)
+    
+    def get_grade(self):
+        return self.__grade
+    
+    def set_grade(self,grade):
+        if grade not in range(1,6):
+            print('Wrong Grade')
+        else:
+            self.__grade=grade
+            self.set_id()
+    
+    def get_speciality(self):
+        return self.__speciality
+    
+    def set_speciality(self,speciality):
+        if speciality.upper() not in ('STUDENTS','PROFESSORS','ADMINS'):
+            print('Wrong Speciality')
+        else:
+            self.__speciality=speciality.upper()
+            self.set_id()
+
+    def get_salary(self):
+        basic_salary=3000
+        print('The salary of Administrator ',self.get_first_name(),self.get_last_name(),'is: ',end=' ')
+        salary=str(round((basic_salary + (self.get_grade() / 100) *
+                            (basic_salary)), 2)) + '$'
+        return salary
+    
+    def define(self):
+        if self.get_middle_name():
+            print('Administrator',self.get_first_name(),self.get_middle_name(),self.get_last_name(),'-his Id is: ',self.__id)
+        else:
+            print('Administrator',self.get_first_name(),self.get_last_name(),'-Id is: ',self.__id)
+    
+    
+
