@@ -3,6 +3,7 @@
 This Repository contains several projects which i built while studying python from udemy.
 
 1)E-shop
+	
 	this is a mini project the facilities in this project is that it contains two menus one is for the admin and the other for the user.
 	the admin can perform several tasks such as adding a user adding a product removing users or product checking the cart,checking for the number of users or products.
 	
