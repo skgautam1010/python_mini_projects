@@ -170,3 +170,63 @@ class Student(Person):
         else:
             print('Student',self.get_first_name(),self.get_last_name(),'-his Id is: ',self.__id)
     
+
+class Professor(Person):
+    number_of_professors=0
+    def __init__(self, f_name, l_name, age, password,grade,speciality,teaching_hours, m_name=''):
+        super().__init__(f_name, l_name, age, password, m_name)
+        self.__grade=grade
+        self.__speciality=speciality.upper()
+        self.__teaching_hours=teaching_hours
+        self.__id='PRO'+'_' + str(self.__grade) + '_' + self.__speciality \
+                    + '_' + str(self.number_of_professors)
+    
+    def get_id(self):
+        return self.__id
+    
+    def set_id(self):
+        self.__id='PRO'+'_' + str(self.__grade) + '_' + self.__speciality \
+                    + '_' + str(self.number_of_professors)
+    
+    def get_grade(self):
+        return self.__grade
+
+    def set_grade(self,grade):
+        if grade not in range(1,6):
+            print("Wrong Grade!!")
+        else:
+            self.__grade=grade
+            self.set_id()
+    def get_speciality(self):
+        return self.__speciality
+    
+    def set_speciality(self,speciality):
+        if speciality not in ('MATHS','INFORMATICS','ELECTRONICS'):
+            print('Wrong Speciality!!')
+        else:
+            self.__speciality=speciality
+            self.set_id()
+    
+    def get_teaching_hours(self):
+        return self.__teaching_hours
+    
+    def set_teaching_hours(self,teaching_hours):
+        if teaching_hours>=5 and teaching_hours<=25:
+            self.__teaching_hours=teaching_hours
+        else:
+            print("Teaching Hours out of range!!")
+    
+    def get_salary(self):
+        basic_salary=2000
+        print('The salary of professor ',self.get_first_name(),self.get_last_name(),'is: ',end=' ')
+        salary=str(round((basic_salary + (self.get_grade() / 100) * (basic_salary) +
+                            self.__teaching_hours * 20), 2)) + '$'
+        return salary
+    
+    def define(self):
+        if self.get_middile_name():
+            print('Professor',self.get_first_name(),self.get_middile_name(),self.get_last_name(),'-his Id is: ',self.__id)
+        else:
+            print('Professor',self.get_first_name(),self.get_last_name(),'-his id is: ',self.__id)
+    
+
