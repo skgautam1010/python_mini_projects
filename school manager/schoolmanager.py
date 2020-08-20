@@ -197,6 +197,7 @@ class Professor(Person):
         else:
             self.__grade=grade
             self.set_id()
+  
     def get_speciality(self):
         return self.__speciality
     
@@ -354,6 +355,50 @@ def professor_menu(logged_member:Professor):
                 i += 1
     return professor_menu(logged_member)
 
+def set_person_data(keyword,person:Person,data):
+    if keyword=='first_name':
+        person.set_first_name(data)
+    elif keyword=='last_name':
+        person.set_last_name(data)
+    elif keyword=='middle_name':
+        person.set_middile_name(data)
+    elif keyword=='age':
+        person.set_age(int(data))
+    elif keyword=='email':
+        person.set_email(data)
+    elif keyword=='password':
+        person.administrator_set_password(data)
+
+def get_members_detail(member_list):
+    i=1
+    for member in member_list:
+        print('('+str(i)+')',end=' ')
+        member.define()
+        i +=1
+
+def add_members(member_list):
+    print('Please enter the data of the %s: ' %
+          ('student' if members_list == members[0] else
+           'professor' if members_list == members[1] else
+           'administrator'))
+    if member_list==members[0]:
+        member=Student('a','a',7,'a','a','a',11)
+        member.set_group_number(int(input("Please enter the group number: ")))
+    elif member_list==members[1]:
+        member=Professor('a','a',7,'a','a','a',11)
+        member.set_teaching_hours(int(input("enter teaching hours: ")))
+    else:
+        member=Administrator('a','a',7,'a','a','a')
+    member.set_first_name(input('First_name: '))
+    member.set_last_name(input('Last_name: '))
+    member.set_age(int(input('Age: ')))
+    member.administrator_set_password(input('Enter password: '))
+    member.set_grade(input('Enter grade: ') if members_list == members[0]
+                     else int(input('Enter grade: ')))
+    member.set_speciality(input('Enter speciality: '))
+    member_list.append(member)
+
+
 def student_administrator_menu(logged_member:Administrator):
     print('Please select an operation:'
           '\n\t1)Change your password'
@@ -379,7 +424,90 @@ def student_administrator_menu(logged_member:Administrator):
     elif operation==2:
         get_members_list(members[0])
     elif operation in range(3,9):
-        
+        student_number=get_member_number(members[0])
+        data=input("Enter the data that u want to set: ")
+        set_person_data('first_name' if operation==3 else 'last_name' if operation==4
+        else 'middle_name' if operation==5 else 'age' if operation==6 else 'email' if operation==7 else 'password' ,members[0][student_number],data)
+    elif operation in range(9,12):
+        student_number=get_member_number(members[0])
+        data=input('Enter the data that u want to set: ')
+        {
+            '9':members[0][student_number].set_grade,
+            '10':members[0][student_number].set_speciality,
+            '11':members[0][student_number].set_group_number
+        }[operation](int(data) if operation=='11' else data)
+    elif operation==12:
+        student_number=get_member_number(members[0])
+        print(members[0][student_number].get_average())
+    elif operation==13:
+        get_members_detail(members[0])
+    elif operation==14:
+        add_members(members[0])
+    else:
+        if logged_member.get_speciality()=='ADMINS':
+            admins_menu(logged_member)
+        else:
+            print("Wrong operation !! ")
+    return student_administrator_menu(logged_member)
+
+def professor_administrator_menu(logged_member:Administrator):
+    print('Please select an operation:'
+          '\n\t1)Change your password'
+          '\n\t2)Check professors list'
+          '\n\t3)Change professor first name'
+          '\n\t4)Change professor last name'
+          '\n\t5)Change professor middle name'
+          '\n\t6)Change professor age'
+          '\n\t7)Change professor email'
+          '\n\t8)Change professor password'
+          '\n\t9)Change professor grade'
+          '\n\t10)Change professor speciality'
+          '\n\t11)Change professor teaching hours'
+          '\n\t12)Check professor salary'
+          '\n\t13)Check professors details'
+          '\n\t14)Add a new professor'
+          '\n\t%s' % '15)Back to the admin menu'
+          if logged_member.get_speciality() == 'ADMINS' else '')
+    operation = int(input('> '))
+    while operation not in range(1,16):
+        operation=int(input("Incorrect Response!! Please choose a operation again: "))
+    if operation==1:
+        logged_member.set_password()
+    elif operation==2:
+        get_members_list(members[1])
+    elif operation in range(3,9):
+        professor_number=get_member_number(members[1])
+        data = input('Please enter the data that you want to set: ')
+        set_person_data('first_name' if operation == 3
+                        else 'last_name' if operation == 4
+                        else 'middle_name' if operation == 5
+                        else 'age' if operation == 6
+                        else 'email' if operation == 7
+                        else 'password', members[1][professor_number],
+                        data)
+    elif operation in range(9, 12):
+        professor_number = get_member_number(members[1])
+        data = input('Please enter the data that you want to set: ')
+        {
+            9: members[1][professor_number].set_grade,
+            10: members[1][professor_number].set_speciality,
+            11: members[1][professor_number].set_teaching_hours,
+        }[operation](data if operation == 10 else int(data))
+    elif operation==12:
+        professor_number=get_member_number(members[1])
+        print(members[1][professor_number].get_salary())
+    elif operation==13:
+        get_members_detail(members[1])
+    elif operation == 14:
+        add_member(members[1])
+    else:
+        if logged_member.get_speciality() == 'ADMINS':
+            admins_menu(logged_member)
+        else:
+            print('Wrong operation! please enter an operation again: ')
+    return professor_administrator_menu(logged_member)
+
+
 
 members=[[Student('sonu','gautam',24,'sonu1234','FIRST','PYTHON',15,'Kumar')] ,
             [Professor('Abc','xyz',44,'abc1234','4','MATHS',18)],
