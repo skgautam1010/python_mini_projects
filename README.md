@@ -30,5 +30,14 @@ This Repository contains several projects which i built while studying python fr
 	is done with the help of os module and json the path of the file and the file name is stored in a json file while hiding the file in a secret folder.
 	and then at the time of retreiving the file or getting the back to its directory that path from the json file is only used,
 	to get back the file,the file can be of any type may be jpg,mp4,txt,png,etc.
+
+4)Automate Youtube Video Checking
+	
+
+	
+	This is a mini project where the use of Web scapping comes into picture . a module name BeautifulSoup is used and requests module and json is also used.
+	json is used to contain the data.the reuests module is used to get the requests the chaanels video ids are contained in to the json file and by comaring the id it is 
+	checked if the new video has arrived. the last 10 videos of the channel id is stred in the json file.
+
  
  
